@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Users;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ApiController extends Controller
 {
@@ -17,10 +18,10 @@ class ApiController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
-        $user = Users::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => Hash::make($request->password),
             'phone' => $request->phone,
         ]);
 
@@ -40,6 +41,34 @@ class ApiController extends Controller
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json(['message' => 'Invalid login details'], 401);
         }
+
+        $user = User::where('email', $request->email)->firstOrFail();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'user login successful',
+            'token' => $user->createToken('api-token')->plainTextToken
+        ],200);
+    }
+
+    public function profile(){
+        $userdata= auth()->user();
+        return response()->json([
+            'status' => true,
+            'message' => 'user profile',
+            'data' => $userdata,
+            'id' => auth()->user()->id
+        ],200);
+        //return response()->json($request->user());
+    }
+
+    public function logout(){
+        auth()->user()->tokens()->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'loggout out',
+            'data' => []
+        ],200);
     }
 
     
