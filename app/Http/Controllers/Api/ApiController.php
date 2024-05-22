@@ -7,9 +7,29 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
+/**
+ * @OA\Info(
+ *     title="User API",
+ *     version="1.0.0",
+ *     description="Documentation for my RESTful API built with Laravel."
+ * )
+ */
 class ApiController extends Controller
 {
+ /**
+ * @OA\Post(
+ *      path="user/registration",
+ *      operationId="User-registration",
+ *      tags={"Users"},
+ *      summary="Get list of users",
+ *      description="Returns list of users",
+ *      @OA\Response(
+ *          response=200,
+ *          description="Successful operation"
+ *       ),
+ *      @OA\Response(response=400, description="Bad request"),
+ * )
+ */
     public function register(Request $request)
     {
         $request->validate([
@@ -32,6 +52,20 @@ class ApiController extends Controller
         ],200);
     }
 
+    /**
+ * @OA\Post(
+ *      path="user/login",
+ *      operationId="User-login",
+ *      tags={"Users"},
+ *      summary="Get list of users",
+ *      description="Returns list of users",
+ *      @OA\Response(
+ *          response=200,
+ *          description="Successful operation"
+ *       ),
+ *      @OA\Response(response=400, description="Bad request"),
+ * )
+ */
     public function login(Request $request){
         $request->validate([
             'email' => 'required|string|email',
@@ -50,6 +84,21 @@ class ApiController extends Controller
             'token' => $user->createToken('api-token')->plainTextToken
         ],200);
     }
+
+ /**
+ * @OA\Get(
+ *      path="user/profile",
+ *      operationId="getUsersList",
+ *      tags={"Users"},
+ *      summary="Get list of users",
+ *      description="Returns list of users",
+ *      @OA\Response(
+ *          response=200,
+ *          description="Successful operation"
+ *       ),
+ *      @OA\Response(response=400, description="Bad request"),
+ * )
+ */
 
     public function profile(){
         $userdata= auth()->user();

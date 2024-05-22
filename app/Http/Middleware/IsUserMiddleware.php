@@ -17,16 +17,20 @@ class IsUserMiddleware
     {
         $queryparams= $request->all();
         //dd($queryparams['test']);
-       if(isset($queryparams['test']) && $queryparams['test'] === "yes")
+        if($request->is('user/*'))
         {
             return $next($request);
         }
-        else{
-            return response()->json([
-                'status' => false,
-                'message' => 'unauthenticate user',
-                'data' => []
-            ],400);
-        }
+    //    if(isset($queryparams['test']) && $queryparams['test'] === "yes")
+    //     {
+    //         return $next($request);
+    //     }
+    //     else{
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'unauthenticate user',
+    //             'data' => []
+    //         ],400);
+    //     }
     }
 }
